@@ -28,3 +28,7 @@ export function setRoom(userA, userB, roomId) {
 export function getUserRoom(userId) {
   return userToRoom[userId];
 }
+
+export function getRoomParticipants(roomId) {
+  return Object.keys(userToRoom).filter(user => userToRoom[user] === roomId);
+}

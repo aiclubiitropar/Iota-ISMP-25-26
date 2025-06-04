@@ -16,6 +16,19 @@ export function GET(request) {
     });
   }
 
+  // 💡 Randomly pair with AI bot
+  const shouldPairWithBot = Math.random() < 1/3;
+
+  if (shouldPairWithBot) {
+    const roomId = uuidv4();
+    const botId = `BOT-${uuidv4()}`;
+    setRoom(userId, botId, roomId); // 'BOT-...' is the second participant
+    return new Response(JSON.stringify({ status: 'paired', roomId }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   if (isQueueEmpty()) {
     addToQueue(userId);
     return new Response(JSON.stringify({ status: 'waiting' }), {
