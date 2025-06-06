@@ -1,5 +1,6 @@
 const queue = [];
 const userToRoom = {}; // userId -> roomId
+const roomStartTime = {}; // roomId -> startTime
 
 export function addToQueue(userId) {
   queue.push(userId);
@@ -23,6 +24,7 @@ export function isQueueEmpty() {
 export function setRoom(userA, userB, roomId) {
   userToRoom[userA] = roomId;
   userToRoom[userB] = roomId;
+  roomStartTime[roomId] = Date.now();
 }
 
 export function getUserRoom(userId) {
@@ -31,4 +33,23 @@ export function getUserRoom(userId) {
 
 export function getRoomParticipants(roomId) {
   return Object.keys(userToRoom).filter(user => userToRoom[user] === roomId);
+}
+
+export function getRoomStartTime(roomId) {
+  console.log('here')
+  if (!roomStartTime[roomId]) {
+    throw new Error(`Room ${roomId} does not exist.`);
+  }
+  return roomStartTime[roomId];
+}
+
+export function removeUserFromRoom(userId) {
+  const roomId = userToRoom[userId];
+  if (roomId) {
+    delete userToRoom[userId];
+    const participants = getRoomParticipants(roomId);
+    if (participants.length === 0 || participants.length === 1 && participants[0].startsWith('BOT-')) {
+      delete roomStartTime[roomId]; // Clean up if no participants left
+    }
+  }
 }

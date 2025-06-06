@@ -17,7 +17,7 @@ export function GET(request) {
   }
 
   // 💡 Randomly pair with AI bot
-  const shouldPairWithBot = Math.random() < 1/3;
+  const shouldPairWithBot = Math.random() < 1;
 
   if (shouldPairWithBot) {
     const roomId = uuidv4();
