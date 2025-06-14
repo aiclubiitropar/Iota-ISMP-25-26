@@ -15,7 +15,7 @@ export async function POST(request) {
       });
     }
 
-    const expectedRoom = getUserRoom(userId);
+    const expectedRoom = await getUserRoom(userId);
     if (!expectedRoom || expectedRoom !== roomId) {
       return new Response(JSON.stringify({ error: 'User not in this room' }), {
         status: 403,
@@ -31,10 +31,10 @@ export async function POST(request) {
       });
     }
 
-    const participants = getRoomParticipants(roomId);
+    const participants = await getRoomParticipants(roomId);
     const otherUserId = participants.find(uid => uid !== userId);
     const actual = otherUserId.startsWith('BOT-') ? 'BOT' : 'HUMAN';
-    const timeTaken = Date.now() - getRoomStartTime(roomId);
+    const timeTaken = Date.now() - await getRoomStartTime(roomId);
 
     const isCorrect = guess === actual;
     const scoreDelta = getScoreDelta(isCorrect, timeTaken);
@@ -72,8 +72,8 @@ export async function POST(request) {
 }
 
 function getScoreDelta(isCorrect, timeTaken) {
-  const MAX_SCORE = 100;
-  const DECAY_RATE = 0.004;
+  const MAX_SCORE = Number(process.env.MAX_SCORE);
+  const DECAY_RATE = Number(process.env.DECAY_RATE);
   const timeInSeconds = timeTaken / 1000;
   const baseScore = Math.round(MAX_SCORE * Math.exp(-DECAY_RATE * timeInSeconds));
   const scoreDelta = isCorrect ? baseScore : -Math.round(MAX_SCORE / 2);

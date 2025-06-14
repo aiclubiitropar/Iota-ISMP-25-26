@@ -19,9 +19,9 @@ export async function POST(req) {
   const messages = db.collection('messages');
   await messages.insertOne({ roomId, senderId, content, timestamp });
 
-  const participants = getRoomParticipants(roomId);
+  const participants = await getRoomParticipants(roomId);
   console.log('Participants in room:', participants);
-  const otherParticipant = getRoomParticipants(roomId).find(user => user !== senderId);
+  const otherParticipant = participants.find(user => user !== senderId);
   console.log('Other participant:', otherParticipant);
   if (otherParticipant.startsWith('BOT-')) {
     // Simulate bot response
@@ -42,8 +42,8 @@ export async function POST(req) {
   });
 }
 
-const minDelay = 2000; // 10 seconds
-const wpm = 150; // words per minute
+const minDelay = Number(process.env.MIN_DELAY);
+const wpm = Number(process.env.WPM); // words per minute
 
 function getTypingDelay(text) {
   // ~50 words per minute typing speed => ~300ms per word

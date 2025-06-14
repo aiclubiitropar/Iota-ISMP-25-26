@@ -17,9 +17,11 @@ export async function GET(request) {
     const db = (await clientPromise).db();
     const guess = await db.collection('guesses').findOne({ userId, roomId });
 
-    const participants = getRoomParticipants(roomId);
-    participants.forEach(u => {
-      if (u === userId) removeUserFromRoom(u);
+    const participants = await getRoomParticipants(roomId);
+    participants.forEach(async u => {
+      if (u === userId){
+        await removeUserFromRoom(u);
+      } 
     });
 
     if (!guess) {

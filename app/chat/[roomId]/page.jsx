@@ -14,8 +14,12 @@ export default function ChatRoom({ params }) {
   const [userId, setUserId] = useState('');
   const [remaining, setRemaining] = useState(0);
 
-  const chatDuration = 5 * 60 * 1000;
-  const checkDuration = 2 * 1000;
+  if (!process.env.NEXT_PUBLIC_CHAT_DURATION_IN_MINUTES || !process.env.NEXT_PUBLIC_CHECK_DURATION_IN_SECONDS) {
+    throw new Error('CHAT_DURATION_IN_MINUTES and CHECK_DURATION_IN_SECONDS must be set in .env');
+  }
+  const chatDuration = Number(process.env.NEXT_PUBLIC_CHAT_DURATION_IN_MINUTES) * 60 * 1000;
+  const checkDuration = Number(process.env.NEXT_PUBLIC_CHECK_DURATION_IN_SECONDS) * 1000;
+  const currentUserId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
 
   // Get userId from localStorage on mount
   useEffect(() => {
@@ -60,6 +64,7 @@ export default function ChatRoom({ params }) {
         const elapsed = now - startTime;
         const remaining = chatDuration - elapsed;
         setRemaining(remaining);
+        console.log('startTime', startTime);
 
         if (remaining <= 0) {
           router.push(`/result?roomId=${roomId}&userId=${userId}`);
@@ -111,7 +116,7 @@ export default function ChatRoom({ params }) {
       <Timer remaining={remaining} setRemaining={setRemaining} />
       <div className="border p-4 h-64 overflow-y-scroll mb-4 bg-white">
         {messages.map((m, i) => (
-          <div className='text-gray-800' key={i}><strong>{m.senderId}</strong>: {m.content}</div>
+          <div className='text-gray-800' key={i}><strong>{m.senderId==currentUserId?<span className='text-blue-500'>You</span>:<span className='text-green-500'>?</span>}</strong>: {m.content}</div>
         ))}
       </div>
       <input

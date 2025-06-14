@@ -28,6 +28,7 @@ export default function Home() {
       const userId = getOrCreateUserId();
       const res = await fetch(`/api/check-match?userId=${userId}`);
       const data = await res.json();
+      console.log('paired status:', data.paired);
 
       if (data.paired) {
         clearInterval(interval);
