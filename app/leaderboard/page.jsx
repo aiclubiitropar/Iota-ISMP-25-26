@@ -7,6 +7,7 @@ export default function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const currentUserId = typeof window !== 'undefined' ? localStorage.getItem('userId') : null;
 
   useEffect(() => {
     async function fetchLeaderboard() {
@@ -31,7 +32,7 @@ export default function Leaderboard() {
       <h1 className="text-3xl font-bold mb-6 text-center">Leaderboard</h1>
       <table className="w-full table-auto border-collapse border border-gray-300">
         <thead>
-          <tr className="bg-gray-200 text-left">
+          <tr className="bg-gray-200 text-left text-gray-700">
             <th className="border px-4 py-2">#</th>
             <th className="border px-4 py-2">User ID</th>
             <th className="border px-4 py-2">Score</th>
@@ -39,7 +40,9 @@ export default function Leaderboard() {
         </thead>
         <tbody>
           {leaderboard.map((user, index) => (
-            <tr key={user.userId} className="hover:bg-gray-100">
+            <tr key={user.userId} className={`hover:bg-gray-100 ${
+        user.userId === currentUserId ? 'bg-blue-700 text-white-300 font-bold' : ''
+      }`}>
               <td className="border px-4 py-2">{index + 1}</td>
               <td className="border px-4 py-2">{user.userId}</td>
               <td className="border px-4 py-2">{user.score}</td>

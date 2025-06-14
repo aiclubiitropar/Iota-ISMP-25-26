@@ -53,6 +53,7 @@ export async function POST(request) {
       actual,
       timestamp: new Date(),
       timeTaken,
+      scoreDelta,
     };
 
     await db.collection('guesses').insertOne(result);
@@ -72,7 +73,7 @@ export async function POST(request) {
 
 function getScoreDelta(isCorrect, timeTaken) {
   const MAX_SCORE = 100;
-  const DECAY_RATE = 0.002;
+  const DECAY_RATE = 0.004;
   const timeInSeconds = timeTaken / 1000;
   const baseScore = Math.round(MAX_SCORE * Math.exp(-DECAY_RATE * timeInSeconds));
   const scoreDelta = isCorrect ? baseScore : -Math.round(MAX_SCORE / 2);

@@ -58,6 +58,7 @@ export default function ResultPage() {
       >
         {correct ? 'Correct 🎉' : 'Incorrect ❌'}
       </div>
+      <p>{correct ? 'You earned ' + result.scoreDelta + ' points!' : 'You lost ' + Math.abs(result.scoreDelta) + ' points. Better luck next time!'}</p>
 
       <p className="mb-2 text-gray-700">
         You guessed: <strong>{result.guess}</strong>

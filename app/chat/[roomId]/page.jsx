@@ -14,7 +14,7 @@ export default function ChatRoom({ params }) {
   const [userId, setUserId] = useState('');
   const [remaining, setRemaining] = useState(0);
 
-  const chatDuration = 0.5 * 60 * 1000;
+  const chatDuration = 5 * 60 * 1000;
   const checkDuration = 2 * 1000;
 
   // Get userId from localStorage on mount
