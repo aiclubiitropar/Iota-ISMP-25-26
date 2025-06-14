@@ -35,7 +35,13 @@ export default function ResultPage() {
   if (!result) {
     return (
       <div className="p-4 text-center">
-        <p className="text-red-600">No result found for this session.</p>
+        <p className="text-red-600 mb-4">No result found for this session.</p>
+          <button
+          onClick={() => router.push('/leaderboard')}
+          className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          >
+        Proceed to Leaderboard
+      </button>
       </div>
     );
   }

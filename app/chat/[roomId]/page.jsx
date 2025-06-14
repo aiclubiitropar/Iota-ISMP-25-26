@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, use } from 'react';
+import Timer from './timer';
 
 export default function ChatRoom({ params }) {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function ChatRoom({ params }) {
   const [content, setContent] = useState('');
   const [guessed, setGuessed] = useState(true);
   const [userId, setUserId] = useState('');
+  const [remaining, setRemaining] = useState(0);
 
   const chatDuration = 0.5 * 60 * 1000;
   const checkDuration = 2 * 1000;
@@ -57,6 +59,7 @@ export default function ChatRoom({ params }) {
         const now = Date.now();
         const elapsed = now - startTime;
         const remaining = chatDuration - elapsed;
+        setRemaining(remaining);
 
         if (remaining <= 0) {
           router.push(`/result?roomId=${roomId}&userId=${userId}`);
@@ -105,6 +108,7 @@ export default function ChatRoom({ params }) {
   return (
     <div className="p-4">
       <h1 className="text-xl font-bold mb-4">Room: {roomId}</h1>
+      <Timer remaining={remaining} setRemaining={setRemaining} />
       <div className="border p-4 h-64 overflow-y-scroll mb-4 bg-white">
         {messages.map((m, i) => (
           <div className='text-gray-800' key={i}><strong>{m.senderId}</strong>: {m.content}</div>
